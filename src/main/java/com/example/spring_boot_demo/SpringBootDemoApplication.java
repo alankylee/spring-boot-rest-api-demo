@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
                 title = "Spring Boot 3 Rest Api demo",
                 version = "0.1",
                 description = "My API",
-                license = @License(name = "Apache 2.0", url = "http://foo.bar"),
+                license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
                 contact = @Contact(url = "https://github.com/alansiuminglee", name = "Alan Lee", email = "lky0201@hotmail.com")
         ),
         security = {

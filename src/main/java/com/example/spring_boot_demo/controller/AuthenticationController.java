@@ -16,9 +16,11 @@ import com.example.spring_boot_demo.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Authentication")
+@SecurityRequirements() // Override the default security requirements that defined in the main class
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
