@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
         scheme = "bearer",
-        description = "Please input the access token that can be get from login() method."
+        description = "Please input the access token that can be obtained from login() method."
 )
 public class WebSecurityConfiguration {
     
