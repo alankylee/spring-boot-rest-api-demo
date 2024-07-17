@@ -2,13 +2,14 @@ package com.example.spring_boot_demo.constant;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum Gender {
-    M("M"),
-    F("F");
+public enum Pet {
+    CAT("Cat"),
+    DOG("Dog"),
+    BIRD("Bird");
     
     private final String value;
 
-    Gender(String value) {
+    Pet(String value) {
         this.value = value;
     }
 

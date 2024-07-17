@@ -9,19 +9,15 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @OpenAPIDefinition(
         info = @Info(
                 title = "Spring Boot 3 Rest Api demo",
-                version = "0.1",
-                description = "My API",
-                license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
-                contact = @Contact(url = "https://github.com/alansiuminglee", name = "Alan Lee", email = "lky0201@hotmail.com")
-        ),
-        security = {
-            @SecurityRequirement(name = "Bear Authentication")
-        }
+                version = "0.2",
+                description = "My DEMO API",
+                license = @License(name = "MIT", url = "https://github.com/alankylee/spring-boot-rest-api-demo/blob/main/LICENSE"),
+                contact = @Contact(url = "https://github.com/alankylee", name = "Alan Lee", email = "lky0201@hotmail.com")
+        )
 )
 @SpringBootApplication
 public class SpringBootDemoApplication {

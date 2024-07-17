@@ -14,15 +14,15 @@ import com.example.spring_boot_demo.entity.TestData;
 import com.example.spring_boot_demo.exception.ResourceNotFoundException;
 import com.example.spring_boot_demo.payload.TestDataDto;
 import com.example.spring_boot_demo.repository.TestDataRepository;
-import com.example.spring_boot_demo.service.HealthCheckService;
+import com.example.spring_boot_demo.service.TestDataService;
 
 @Service
-public class HealthCheckServiceImpl implements HealthCheckService {
+public class TestDataServiceImpl implements TestDataService {
 
     private final TestDataRepository testDataRepo;
     private final ModelMapper mapper;
 
-    public HealthCheckServiceImpl(TestDataRepository testDataRepo, ModelMapper mapper) {
+    public TestDataServiceImpl(TestDataRepository testDataRepo, ModelMapper mapper) {
         this.testDataRepo = testDataRepo;
         this.mapper = mapper;
     }

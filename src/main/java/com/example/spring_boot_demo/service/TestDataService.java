@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.spring_boot_demo.payload.TestDataDto;
 
-public interface HealthCheckService {
+public interface TestDataService {
 
     void save(TestDataDto newDataDto);
 

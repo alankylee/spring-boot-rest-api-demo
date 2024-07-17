@@ -15,6 +15,7 @@ import com.example.spring_boot_demo.entity.Role;
 import com.example.spring_boot_demo.entity.User;
 import com.example.spring_boot_demo.exception.BlogAPIException;
 import com.example.spring_boot_demo.payload.JwtAuthenticationRequest;
+import com.example.spring_boot_demo.payload.JwtAuthenticationResponse;
 import com.example.spring_boot_demo.payload.RegisterDto;
 import com.example.spring_boot_demo.repository.RoleRepository;
 import com.example.spring_boot_demo.repository.UserRepository;
@@ -28,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepo;
-    private RoleRepository roleRepo;
+    private final RoleRepository roleRepo;
 
     public AuthenticationServiceImpl(
             AuthenticationManager authManager,
@@ -44,19 +45,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String login(JwtAuthenticationRequest jwtAuthReq) {
+    public JwtAuthenticationResponse login(JwtAuthenticationRequest jwtAuthReq) {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(jwtAuthReq.getEmail(), jwtAuthReq.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
 
-        return jwtTokenProvider.generateToken(authentication);
+        return new JwtAuthenticationResponse(token, "Bearer");
     }
 
     @Override
-    public String register(RegisterDto registerDto) {
+    public void register(RegisterDto registerDto) {
         // Check if email exists in database
-        if(userRepo.existsByEmail(registerDto.getEmail())) {
-            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Email is already exists!.");
+        if(Boolean.TRUE.equals(userRepo.existsByEmail(registerDto.getEmail()))) {
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "That email is taken. Try another.");
         }
 
         User user = new User();
@@ -74,8 +76,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setRoles(roles);
 
         userRepo.save(user);
-
-        return "Registered!";
     }
 
 }

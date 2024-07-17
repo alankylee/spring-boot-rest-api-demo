@@ -1,15 +1,11 @@
 package com.example.spring_boot_demo.payload;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
-    private String accessToken;
-    private String tokenType = "Bearer";
+    private final String accessToken;
+    private final String tokenType;
 }

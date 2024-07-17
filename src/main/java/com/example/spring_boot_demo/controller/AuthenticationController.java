@@ -1,6 +1,5 @@
 package com.example.spring_boot_demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.spring_boot_demo.constant.SwaggerExamples.AuthenticationExamples;
+import com.example.spring_boot_demo.payload.GenericError;
+import com.example.spring_boot_demo.payload.GenericResponseEntity;
 import com.example.spring_boot_demo.payload.JwtAuthenticationRequest;
 import com.example.spring_boot_demo.payload.JwtAuthenticationResponse;
 import com.example.spring_boot_demo.payload.RegisterDto;
 import com.example.spring_boot_demo.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,54 +29,54 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationService authService;
-    
+    private final AuthenticationService authService;
 
-    
+    public AuthenticationController(AuthenticationService authService) {
+        this.authService = authService;
+    }
+
     @Operation(
             summary = "Login",
-            description = "Just login if you have an account."
-    )
+            description = "Login with your Email and password.")
     @ApiResponse(
             responseCode = "200",
-            description = "Http Status 200 SUCCESS"
-    )
+            content = @Content(examples = @ExampleObject(value = AuthenticationExamples.LOGIN_SUCCESS_RESPONSE)))
+    @ApiResponse(
+            responseCode = "400",
+            content = @Content(examples = @ExampleObject(value = AuthenticationExamples.LOGIN_ERROR_RESPONSE)))
     @PostMapping(
             path = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<JwtAuthenticationResponse> login(@RequestBody JwtAuthenticationRequest jwtAuthReq) {
-        String token = authService.login(jwtAuthReq);
-
-        JwtAuthenticationResponse jwtAuthResp = new JwtAuthenticationResponse();
-        jwtAuthResp.setAccessToken(token);
-
-        return ResponseEntity.ok(jwtAuthResp);
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponseEntity<Object>> login(@RequestBody JwtAuthenticationRequest jwtAuthReq) {
+        try {
+            JwtAuthenticationResponse jwtAuthResp = authService.login(jwtAuthReq);
+            return GenericResponseEntity.ok("Login successful", jwtAuthResp);
+        } catch (Exception e) {
+            return GenericResponseEntity.badRequest(e.getMessage());
+        }
     }
-
-
 
     @Operation(
             summary = "Register",
-            description = "Actually, you can register with any other characters in email field."
-    )
+            description = "Create an account using email.")
     @ApiResponse(
             responseCode = "201",
-            description = "Http Status 201 CREATED"
-    )
+            content = @Content(examples = @ExampleObject(value = AuthenticationExamples.REGISTER_SUCCESS_RESPONSE)))
+    @ApiResponse(
+            responseCode = "400",
+            content = @Content(examples = @ExampleObject(value = AuthenticationExamples.REGISTER_ERROR_RESPONSE)))
     @PostMapping(
             path = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        String response = authService.register(registerDto);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponseEntity<Object>> register(@RequestBody RegisterDto registerDto) {
+        try {
+            authService.register(registerDto);
+            return GenericResponseEntity.created("Registration successful");
+        } catch (Exception e) {
+            return GenericResponseEntity.badRequest(e.getMessage());
+        }
     }
-
-
 
 }
