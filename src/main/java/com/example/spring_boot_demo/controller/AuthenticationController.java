@@ -1,6 +1,7 @@
 package com.example.spring_boot_demo.controller;
 
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_boot_demo.constant.SwaggerExamples.AuthenticationExamples;
-import com.example.spring_boot_demo.payload.GenericError;
 import com.example.spring_boot_demo.payload.GenericResponseEntity;
 import com.example.spring_boot_demo.payload.JwtAuthenticationRequest;
 import com.example.spring_boot_demo.payload.JwtAuthenticationResponse;
@@ -28,6 +28,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final AuthenticationService authService;
 
@@ -50,6 +52,7 @@ public class AuthenticationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponseEntity<Object>> login(@RequestBody JwtAuthenticationRequest jwtAuthReq) {
         try {
+            logger.debug("Login...");
             JwtAuthenticationResponse jwtAuthResp = authService.login(jwtAuthReq);
             return GenericResponseEntity.ok("Login successful", jwtAuthResp);
         } catch (Exception e) {
@@ -72,6 +75,7 @@ public class AuthenticationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponseEntity<Object>> register(@RequestBody RegisterDto registerDto) {
         try {
+            logger.debug("Register...");
             authService.register(registerDto);
             return GenericResponseEntity.created("Registration successful");
         } catch (Exception e) {

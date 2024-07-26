@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,6 +31,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +40,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/testdata")
 public class TestDataController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestDataController.class);
 
     private final TestDataService testDataService;
 
@@ -53,8 +58,13 @@ public class TestDataController {
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     examples = @ExampleObject(value = TestDataExamples.FIND_SUCCESS_RESPONSE)))
     @GetMapping("/{id}")
-    public ResponseEntity<GenericResponseEntity<Object>> find(@Parameter(description = "Id of the testing data") @PathVariable("id") Long id) {
+    public ResponseEntity<GenericResponseEntity<Object>> find(
+        @Parameter(
+            description = "Id of the testing data",
+            schema = @Schema(type = "number", example = "1"))
+        @PathVariable("id") Long id) {
         try {
+            logger.debug("Getting {}...", id);
             TestDataDto testDataDto = testDataService.findById(id);
             return GenericResponseEntity.ok("Success.", testDataDto);
         } catch (Exception e) {
@@ -93,7 +103,12 @@ public class TestDataController {
                     mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
                     examples = @ExampleObject(value = TestDataExamples.DOWNLOAD_SUCCESS_RESPONSE)))
     @GetMapping("/download")
-    public ResponseEntity<?> download(@RequestParam String pathname) {
+    public ResponseEntity<?> download(
+        @Parameter (
+            description="",
+            schema = @Schema(type="string", example = "C:\\path\\output.json"))
+        @RequestParam String pathname) {
+            logger.debug("Downloading {}...", pathname);
         try {
             var file = new File(pathname);
             var resource = new InputStreamResource(new FileInputStream(file));

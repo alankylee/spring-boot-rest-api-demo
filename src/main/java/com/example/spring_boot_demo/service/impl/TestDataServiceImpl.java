@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,8 @@ import com.example.spring_boot_demo.service.TestDataService;
 
 @Service
 public class TestDataServiceImpl implements TestDataService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestDataServiceImpl.class);
 
     private final TestDataRepository testDataRepo;
     private final ModelMapper mapper;
